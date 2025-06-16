@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GW Detector Range Query</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Gravitational Wave Detector Range Query</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="gps_time" class="form-label">GPS Time:</label>
+                        <input type="text" class="form-control" id="gps_time" name="gps_time" 
+                               placeholder="Enter GPS time (e.g., 1434001500)" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Query</button>
+                </form>
+            </div>
+        </div>
+        
+        {% if error %}
+        <div class="alert alert-danger mt-4" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if results %}
+        <div class="mt-4">
+            <h3>Results for GPS time: {{ query_time }}</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Detector</th>
+                        <th>Status</th>
+                        <th>Range (Mpc)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.ifo }}</td>
+                        <td>
+                            {% if result.active is None %}
+                                <span class="badge bg-secondary">Unknown</span>
+                            {% elif result.active %}
+                                <span class="badge bg-success">On</span>
+                            {% else %}
+                                <span class="badge bg-danger">Off</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if result.range is None %}
+                                Unknown
+                            {% else %}
+                                {{ result.range|floatformat:2 }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

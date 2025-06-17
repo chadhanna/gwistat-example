@@ -4,7 +4,8 @@ from .models import DetectorRange
 def home(request):
     context = {
         'results': None,
-        'query_time': None
+        'query_time': None,
+        'total_records': DetectorRange.objects.count()
     }
     
     if request.method == 'POST':

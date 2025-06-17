@@ -1,3 +1,4 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,8 @@
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Gravitational Wave Detector Range Query</h1>
+        
+        <p class="text-muted">Total records in database: {{ total_records|intcomma }}</p>
         
         <div class="card">
             <div class="card-body">
